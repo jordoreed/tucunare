@@ -1,3 +1,9 @@
+if (typeof module != "undefined" && module.exports) {
+  module.exports.vec2 = vec2;
+  module.exports.vec3 = vec3;
+  module.exports.vec4 = vec4;
+}
+
 function vec2(x, y) {
   if (!x) x = 0;
   if (!y) y = 0;
