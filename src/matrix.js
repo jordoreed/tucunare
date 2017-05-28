@@ -81,8 +81,8 @@ mat4.prototype.transpose = function() {
 
 mat4.prototype.multiply = function(r) {
   // m00 m01 m02 m03     m00 m01 m02 m03
-  // m04 m05 m06 m07     m04 m05 m06 m07
-  // m08 m09 m10 m11  X  m08 m09 m10 m11
+  // m04 m05 m06 m07  X  m04 m05 m06 m07
+  // m08 m09 m10 m11     m08 m09 m10 m11
   // m12 m13 m14 m15     m12 m13 m14 m15
   return new mat4(
     (this.values[ 0] * r.values[ 0]) + (this.values[ 1] * r.values[ 4]) + (this.values[ 2] * r.values[ 8]) + (this.values[ 3] * r.values[12]),
@@ -105,8 +105,8 @@ mat4.prototype.multiply = function(r) {
 
 mat4.prototype.multiplyEquals = function(r) {
   // m00 m01 m02 m03     m00 m01 m02 m03
-  // m04 m05 m06 m07     m04 m05 m06 m07
-  // m08 m09 m10 m11  X  m08 m09 m10 m11
+  // m04 m05 m06 m07  X  m04 m05 m06 m07
+  // m08 m09 m10 m11     m08 m09 m10 m11
   // m12 m13 m14 m15     m12 m13 m14 m15
   this.values[ 0] = (this.values[ 0] * r.values[ 0]) + (this.values[ 1] * r.values[ 4]) + (this.values[ 2] * r.values[ 8]) + (this.values[ 3] * r.values[12]);
   this.values[ 1] = (this.values[ 0] * r.values[ 1]) + (this.values[ 1] * r.values[ 5]) + (this.values[ 2] * r.values[ 9]) + (this.values[ 3] * r.values[13]);
@@ -128,9 +128,7 @@ mat4.prototype.multiplyEquals = function(r) {
 
 mat4.prototype.multiplyV2 = function(v) {
   // m00 m01 m02 m03     x
-  // m04 m05 m06 m07     y
-  // m08 m09 m10 m11  X
-  // m12 m13 m14 m15
+  // m04 m05 m06 m07  X  y
   return new vec2(
     this.values[ 0] * v.x + this.values[ 1] * v.y + this.values[ 3],
     this.values[ 4] * v.x + this.values[ 5] * v.y + this.values[ 7]);
@@ -138,19 +136,28 @@ mat4.prototype.multiplyV2 = function(v) {
 
 mat4.prototype.multiplyV3 = function(v) {
   // m00 m01 m02 m03     x
-  // m04 m05 m06 m07     y
-  // m08 m09 m10 m11  X  z
-  // m12 m13 m14 m15
+  // m04 m05 m06 m07  X  y
+  // m08 m09 m10 m11     z
   return new vec3(
     this.values[ 0] * v.x + this.values[ 1] * v.y + this.values[ 2] * v.z + this.values[ 3],
     this.values[ 4] * v.x + this.values[ 5] * v.y + this.values[ 6] * v.z + this.values[ 7],
     this.values[ 8] * v.x + this.values[ 9] * v.y + this.values[10] * v.z + this.values[11]);
 };
 
+mat4.prototype.multiplyUpperLeftV3 = function(v) {
+  // m00 m01 m02     x
+  // m04 m05 m06  X  y
+  // m08 m09 m10     z
+  return new vec3(
+    this.values[ 0] * v.x + this.values[ 1] * v.y + this.values[ 2] * v.z,
+    this.values[ 4] * v.x + this.values[ 5] * v.y + this.values[ 6] * v.z,
+    this.values[ 8] * v.x + this.values[ 9] * v.y + this.values[10] * v.z);
+};
+
 mat4.prototype.multiplyV4 = function(v) {
   // m00 m01 m02 m03     x
-  // m04 m05 m06 m07     y
-  // m08 m09 m10 m11  X  z
+  // m04 m05 m06 m07  X  y
+  // m08 m09 m10 m11     z
   // m12 m13 m14 m15     w
   return new vec4(
     (this.values[ 0] * v.x) + (this.values[ 1] * v.y) + (this.values[ 2] * v.z) + (this.values[ 3] * v.w),
