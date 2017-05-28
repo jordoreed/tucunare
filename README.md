@@ -10,7 +10,7 @@ Go [here](https://badaspen.github.io/tucunare/example.html) to see the live demo
 ## Quickstart
 Note: The quickstart assumes a basic understanding of 3D graphics pipelines
 
-Include the source files in your html (adjust the path to wherever your place the source)
+Include the source files in your html (adjust the paths to wherever you place the source)
 ```html
 <script type="text/javascript" src="src/vector.js"   ></script>
 <script type="text/javascript" src="src/matrix.js"   ></script>
