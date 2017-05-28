@@ -72,9 +72,10 @@ var mvpMatrix = projectionMatrix.multiply(viewMatrix);
 // give the mvp matrix to the vertex shader via the shader's "uniforms" object
 vertShader.uniforms.mvp = mvpMatrix;
 ```
-Draw the triangle
+Draw the triangle and flush the buffer to the canvas
 ```javascript
 tc.drawTriangles(vertShader, fragShader);
+tc.flush();
 ```
 ## What does "tucunaré" mean?
 Tucunaré is the Brazilian name for [Peacock Bass](https://en.wikipedia.org/wiki/Peacock_bass), a very colorful fish in the Amazon region.
