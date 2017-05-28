@@ -6,6 +6,11 @@ Tucunaré is a simple 3D rendering engine intended as an academic learning tool.
 
 ## [Documentation](./docs/API.md)
 
+## Coming Improvements
+I recognize that this library isn't something you'd want to use in a production application. That being said, there are some improvements I plan to make as time permits.
+* Drawing with indexed arrays similar to the OpenGL function glDrawElements
+* Webworkers to parallelize the workload
+
 ## Live Examples
 | Example ||
 | :--- | :---:|
