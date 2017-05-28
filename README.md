@@ -6,8 +6,11 @@ Tucunaré is a simple 3D rendering engine intended as an academic learning tool.
 
 ## [Documentation](./docs/API.md)
 
-## Live Example
-Go [here](https://badaspen.github.io/tucunare/examples/quickstart.html) to see the quickstart example in action and [here](./examples/quickstart.html) for the code.
+## Live Examples
+| Example ||
+| :--- | :---:|
+| [Quickstart](https://badaspen.github.io/tucunare/examples/quickstart.html) | [code](./examples/quickstart.html) |
+| [Shaded Sphere](https://badaspen.github.io/tucunare/examples/shaded-sphere.html) | [code](./examples/shaded-sphere.html) |
 
 ## Quickstart
 Note: The quickstart assumes a basic understanding of 3D graphics pipelines
