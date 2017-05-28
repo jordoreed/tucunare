@@ -1,3 +1,7 @@
+if (typeof module != "undefined" && module.exports) {
+  module.exports.mat4 = mat4;
+}
+
 function mat4(
   m00, m01, m02, m03,
   m04, m05, m06, m07,
