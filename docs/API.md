@@ -25,6 +25,7 @@
   2. fragShader: a FragmentShader instance representing a fragment shader
 
 ### drawTriangles(vertShader, fragShader)
+Expects point data to appear in counter-clockwise order
 * Parameters
   1. vertShader: a VertexShader instance representing a vertex shader
   2. fragShader: a FragmentShader instance representing a fragment shader
