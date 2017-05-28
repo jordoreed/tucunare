@@ -82,7 +82,10 @@
         tc.flush();
 
         // rotate the triangle
-        triangleRotationOnY += 1;
+        triangleRotationOnY += 1.5;
+        if (triangleRotationOnY > 360) {
+          triangleRotationOnY -= 360;
+        }
       }
 
       // start animating
