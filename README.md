@@ -4,8 +4,7 @@ A simple 3D graphics rendering pipeline for the HTML5 Canvas.
 ## Heads Up
 Tucunaré is a simple 3D rendering engine intended as an academic learning tool. If you want to render real-time 3D graphics, please use something like [WebGL](https://get.webgl.org/).
 
-## Setup and usage
-
+## Quickstart
 Include the source files in your html
 ```html
 <script type="text/javascript" src="keys.js"     ></script>
@@ -35,11 +34,7 @@ var fragShader = new Shader();
 fragShader.main = function(input) {
   return input.color;
 };
-function main() {
 ```
-## Build
-
-## Test
 
 ## What does "tucunaré" mean?
 Tucunaré is the Brazilian name for [Peacock Bass](https://en.wikipedia.org/wiki/Peacock_bass), a very colorful fish in the Amazon region.
