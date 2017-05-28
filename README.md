@@ -14,10 +14,11 @@ Include the source files in your html
 <script type="text/javascript" src="shader.js"   ></script>
 <script type="text/javascript" src="tucunare.js" ></script>
 ```
-Create a new Tucunaré instance
+Create a new Tucunaré instance, and set the clear color.
 ```javascript
 var canvas = // access your canvas object here
 var tc = new Tucunare(canvas);
+tc.setClearColor(new vec4(0, 0, 0, 1));
 ```
 Create some geometry. A single triangle, in this example.
 ```javascript
@@ -51,7 +52,7 @@ vertShader.main = function(input) {
   }
 };
 ```
-Create a fragment shader. We'll keep it simple for this example, but you can do any calculation you like in here to determin the fragment color. Tucunaré expects the fragment shader to return a single vec4 value:
+Create a fragment shader. We'll keep it simple for this example, but you can do any calculation you like in here to determine the fragment color. Tucunaré expects the fragment shader to return a single vec4 value:
 * (vec4): the final color of the fragment (pixel)
 ```javascript
 var fragShader = new Shader();
@@ -60,6 +61,5 @@ fragShader.main = function(input) {
   return input.color;
 };
 ```
-
 ## What does "tucunaré" mean?
 Tucunaré is the Brazilian name for [Peacock Bass](https://en.wikipedia.org/wiki/Peacock_bass), a very colorful fish in the Amazon region.
