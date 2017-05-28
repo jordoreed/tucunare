@@ -18,6 +18,7 @@ Include the source files in your html (adjust the paths to wherever you place th
 <script type="text/javascript" src="tucunare/src/shader.js"   ></script>
 <script type="text/javascript" src="tucunare/src/tucunare.js" ></script>
 ```
+
 Create a new Tucunaré instance, and set the clear color.
 ```javascript
 var canvas = // access your canvas object here
@@ -26,9 +27,10 @@ tc.setClearColor(new vec4(0, 0, 0, 1));
 // uncomment if you want to draw both sides of triangles
 // tc.backFaceCullingEnabled = false;
 ```
+
 Create some geometry. In this example, a single triangle.
 ```javascript
-// triangle points in counter-clockwise order
+// counter-clockwise order
 var points = [
   new vec4(-1,-1, 0, 1), // bottom left
   new vec4( 1,-1, 0, 1), // bottom right
@@ -40,6 +42,7 @@ var colors = [
   new vec4(0, 0, 1, 1)  // blue
 ];
 ```
+
 Create a vertex shader. The shader's "main" function will get called for every item in the data sources you provide. It will be passed an "input" object with "point" and "color" defined as properties. To pass data that doesn't change between points (like the MVP matrix), use the shader's "uniforms" object. We'll get to that in a minute.
 Tucunaré expects the vertex shader to return an object with two properties:
 * position (vec4): the transformed point in space
@@ -59,6 +62,7 @@ vertShader.main = function(input) {
   }
 };
 ```
+
 Create a fragment shader. We'll keep it simple for this example, but you can do any calculation you like in here to determine the fragment color. Tucunaré expects the fragment shader to return a single vec4 value:
 * (vec4): the final color of the fragment (pixel)
 ```javascript
@@ -68,6 +72,7 @@ fragShader.main = function(input) {
   return input.color;
 };
 ```
+
 Setup the project and view matrix. Then create the MVP matrix.
 ```javascript
 // define the "camera" position away from the origin so we can see the triangle
@@ -82,6 +87,7 @@ var mvpMatrix = projectionMatrix.multiply(viewMatrix.multiply(modelMatrix));
 // give the mvp matrix to the vertex shader via the shader's "uniforms" object
 vertShader.uniforms.mvp = mvpMatrix;
 ```
+
 Draw the triangle and flush the buffer to the canvas
 ```javascript
 // uncomment if you are animating and need to clear the screen between frames
@@ -89,5 +95,6 @@ Draw the triangle and flush the buffer to the canvas
 tc.drawTriangles(vertShader, fragShader);
 tc.flush();
 ```
+
 ## What does "tucunaré" mean?
 Tucunaré is the Brazilian name for [Peacock Bass](https://en.wikipedia.org/wiki/Peacock_bass), a colorful fish in the Amazon region.
