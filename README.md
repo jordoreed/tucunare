@@ -4,8 +4,6 @@ A simple 3D graphics rendering pipeline for HTML5's Canvas.
 ## Heads Up
 Tucunaré is a simple 3D rendering engine intended as an academic learning tool. If you want to render real-time 3D graphics, please use something like [WebGL](https://get.webgl.org/).
 
-## [Documentation](./docs/API.md)
-
 ## Coming Improvements
 I recognize that this library isn't something you'd want to use in a production application. That being said, there are some improvements I plan to make as time permits.
 * Drawing with indexed arrays similar to the OpenGL function glDrawElements
@@ -16,6 +14,8 @@ I recognize that this library isn't something you'd want to use in a production 
 | :--- | :---:|
 | [Quickstart](https://badaspen.github.io/tucunare/examples/quickstart.html) | [code](./examples/quickstart.html) |
 | [Shaded Sphere](https://badaspen.github.io/tucunare/examples/shaded-sphere.html) | [code](./examples/shaded-sphere.html) |
+
+## [Documentation](./docs/API.md)
 
 ## Quickstart
 Note: The quickstart assumes a basic understanding of 3D graphics pipelines
