@@ -16,7 +16,7 @@ Include the source files in your html
 ```
 Create a new Tucunaré instance
 ```javascript
-var canvas = document.getElementById("tc-canvas");
+var canvas = // access your canvas object here
 var tc = new Tucunare(canvas);
 ```
 Create some geometry. A single triangle, in this example.
