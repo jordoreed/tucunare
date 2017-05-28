@@ -147,14 +147,14 @@ Tucunare.prototype.ndcToScreen = function(point) {
 Tucunare.prototype.drawPoints = function(vertShader, fragShader) {
   var length = vertShader.findIncomingSourcesLength();
   for (var i = 0; i < length; i++) {
-    var vsInput  = vertShader.getVertexShaderInput(i);
-    var vsResult = vertShader.runVertexMain(vsInput);
+    var vsInput  = vertShader.getInput(i);
+    var vsResult = vertShader.runMain(vsInput);
     var clip = vsResult.position;
 
     if (Tucunare.pointInFrustum(clip)) {
       var ndc    = this.clipToNdc(clip);
       var screen = this.ndcToScreen(ndc);
-      var color = fragShader.runFragmentMain(vsResult.output);
+      var color = fragShader.runMain(vsResult.output);
       this.setPixel(screen, color);
     }
   }
@@ -166,8 +166,8 @@ Tucunare.prototype.drawPoints = function(vertShader, fragShader) {
 Tucunare.prototype.drawLines = function(vertShader, fragShader) {
   var length = vertShader.findIncomingSourcesLength();
   for (var i = 0; i < length; i += 2) {
-    var vsResult1 = vertShader.runVertexMain(vertShader.getVertexShaderInput(i  ));
-    var vsResult2 = vertShader.runVertexMain(vertShader.getVertexShaderInput(i+1));
+    var vsResult1 = vertShader.runMain(vertShader.getInput(i  ));
+    var vsResult2 = vertShader.runMain(vertShader.getInput(i+1));
     var clip1 = vsResult1.position;
     var clip2 = vsResult2.position;
 
@@ -225,7 +225,7 @@ Tucunare.prototype.drawScreenLine = function(screen1, screen2, varying1, varying
         0, MathUtils.lerp(screen1.w, screen2.w, varyingT)
       );
       var varying = Tucunare.lerpVaryingValues(varying1, varying2, varyingT);
-      var color = fragShader.runFragmentMain(varying);
+      var color = fragShader.runMain(varying);
 
       if (pixelArray) {
         pixelArray.push({screen: pixel, varying: varying});
@@ -241,9 +241,9 @@ Tucunare.prototype.drawScreenLine = function(screen1, screen2, varying1, varying
 Tucunare.prototype.drawTriangles = function(vertShader, fragShader) {
   var length = vertShader.findIncomingSourcesLength();
   for (var i = 0; i < length; i += 3) {
-    var vsResult1 = vertShader.runVertexMain(vertShader.getVertexShaderInput(i  ));
-    var vsResult2 = vertShader.runVertexMain(vertShader.getVertexShaderInput(i+1));
-    var vsResult3 = vertShader.runVertexMain(vertShader.getVertexShaderInput(i+2));
+    var vsResult1 = vertShader.runMain(vertShader.getInput(i  ));
+    var vsResult2 = vertShader.runMain(vertShader.getInput(i+1));
+    var vsResult3 = vertShader.runMain(vertShader.getInput(i+2));
     var clip1 = vsResult1.position;
     var clip2 = vsResult2.position;
     var clip3 = vsResult3.position;

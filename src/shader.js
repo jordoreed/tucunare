@@ -20,15 +20,15 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-function Shader() {
+function VertexShader() {
   this.uniforms = {};
   this.incoming = {};
   this.main = function() {
-    throw "Must override the shader main function";
+    throw "Must override the vertex shader's main function";
   };
 }
 
-Shader.prototype.findIncomingSourcesLength = function() {
+VertexShader.prototype.findIncomingSourcesLength = function() {
   var length = null;
 
   for (var propName in this.incoming) {
@@ -55,7 +55,7 @@ Shader.prototype.findIncomingSourcesLength = function() {
   return length === null ? 0 : length;
 };
 
-Shader.prototype.getVertexShaderInput = function(index) {
+VertexShader.prototype.getInput = function(index) {
   var input = {};
   for (var propName in this.incoming) {
     if (this.incoming.hasOwnProperty(propName)) {
@@ -65,7 +65,7 @@ Shader.prototype.getVertexShaderInput = function(index) {
   return input;
 };
 
-Shader.prototype.runVertexMain = function(input) {
+VertexShader.prototype.runMain = function(input) {
   var result = this.main(input);
   if (typeof result != "object" || !result.position || result.position.constructor != vec4) {
     throw {
@@ -76,7 +76,17 @@ Shader.prototype.runVertexMain = function(input) {
   return result;
 };
 
-Shader.prototype.runFragmentMain = function(input) {
+
+
+
+function FragmentShader() {
+  this.uniforms = {};
+  this.main = function() {
+    throw "Must override the fragment shader's main function";
+  };
+}
+
+FragmentShader.prototype.runMain = function(input) {
   var result = this.main(input);
   if (!result || result.constructor != vec4) {
     throw {

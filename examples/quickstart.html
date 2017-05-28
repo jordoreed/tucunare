@@ -48,7 +48,7 @@
         new vec4(0, 0, 1, 1)  // blue
       ];
 
-      var vertShader = new Shader();
+      var vertShader = new VertexShader();
       vertShader.main = function(input) {
         return {
           position: this.uniforms.mvp.multiplyV4(input.point),
@@ -58,7 +58,7 @@
         };
       };
 
-      var fragShader = new Shader();
+      var fragShader = new FragmentShader();
       fragShader.main = function(input) {
         return input.color;
       };
