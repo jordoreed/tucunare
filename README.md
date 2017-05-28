@@ -32,9 +32,15 @@ var colors = [
   new vec4(0, 0, 1, 1)  // blue
 ];
 ```
-Create vertex and fragment shaders
+Create a vertex shader. The shader's "main" function will get called for every item in the data sources you provide. For each item in those data sources the main method will get called and passed an "input" object with "point" and "color" defined as properties. Tucunaré expects the vertex shader to return an object with two properties
+* position (vec4): the transformed point in space
+* output (object): an object containing all the values you wish to pass on to the fragment shader
 ```javascript
 var vertShader = new Shader();
+// tells the shader to look in the points array to find the "point" input and the colors array to find the "color" input
+vertShader.incoming.point = points;
+vertShader.incoming.color = colors;
+// the input parameter will have two properties: input.point and input.color (as defined above)
 vertShader.main = function(input) {
   return {
     position: this.uniforms.mvp.multiplyV4(input.point),
@@ -43,6 +49,9 @@ vertShader.main = function(input) {
     }
   }
 };
+```
+Create a fragment shader.
+```javascript
 var fragShader = new Shader();
 fragShader.main = function(input) {
   return input.color;
