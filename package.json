@@ -1,16 +1,14 @@
 {
-  "name": "test",
+  "name": "Tucunaré",
   "version": "1.0.0",
-  "description": "",
-  "main": "blah",
-  "directories": {
-    "test": "test"
-  },
+  "description": "A simple 3D graphics rendering pipeline for HTML5's Canvas.",
   "scripts": {
     "test": "mocha test/"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "Jordan Reed",
+  "email": "jordanreed74@gmail.com",
+  "website": "jordanreed.net",
+  "license": "MIT",
   "devDependencies": {
     "mocha": "^3.2.0"
   }
