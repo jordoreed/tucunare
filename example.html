@@ -1,12 +1,10 @@
 <!doctype html>
 <html>
 <head>
-  <meta charset="utf-8">
   <title>Tucunaré Example</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <style type="text/css">
     #tc-canvas {
-      background-color: black;
       position: absolute;
       top: 0; left: 0;
     }
@@ -25,6 +23,8 @@
       canvas.height = window.innerHeight;
       var tc = new Tucunare(canvas);
       tc.setClearColor(new vec4(0, 0, 0, 1));
+      // uncomment if you want to draw both sides of triangles
+      // tc.backFaceCullingEnabled = false;
 
       var projectionMatrix = null;
       function windowResized() {
@@ -87,11 +87,11 @@
 
       // start animating
       if (requestAnimationFrame) {
-        function mainLoop() {
+        function loop() {
           draw();
-          requestAnimationFrame(mainLoop);
+          requestAnimationFrame(loop);
         }
-        requestAnimationFrame(mainLoop);
+        requestAnimationFrame(loop);
       }
       else {
         setInterval(draw, 1000.0 / 60.0);
