@@ -113,7 +113,7 @@ vec3.prototype.cross    = function(v) {
 
 vec3.prototype.normalize = function() {
   var newVec = new vec3(this.x, this.y, this.z);
-  newVec.normalize();
+  newVec.normalizeEquals();
   return newVec;
 };
 
