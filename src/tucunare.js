@@ -1,6 +1,8 @@
 function Tucunare(canvas) {
   this.canvas = canvas;
   this.context = this.canvas.getContext("2d");
+  this.backFaceCullingEnabled = true;
+
   this.resize();
 }
 
@@ -224,7 +226,7 @@ Tucunare.prototype.drawTriangles = function(vertShader, fragShader) {
     var clip2 = vsResult2.position;
     var clip3 = vsResult3.position;
 
-    if (this.triangleIsForwardFacing(clip1, clip2, clip3)) {
+    if (!this.backFaceCullingEnabled || this.triangleIsForwardFacing(clip1, clip2, clip3)) {
       var clipped = this.clipTriangle(clip1, clip2, clip3, vsResult1.output, vsResult2.output, vsResult3.output);
       for (var j = 0; j < clipped.length; j += 3) {
         var ndcUnsortedTriangle = [
