@@ -1,5 +1,5 @@
 # Tucunaré
-A custom 3D graphics rendering pipeline for JavaScript
+A simple 3D graphics rendering pipeline for the browser using HTML5's Canvas.
 
 ## What does "tucunaré" mean?
 Tucunaré is the Brazilian name for [Peacock Bass](https://en.wikipedia.org/wiki/Peacock_bass), a very colorful fish in the Amazon region.
