@@ -4,11 +4,9 @@
   * [drawLines](#drawlinesvertshader-fragshader)
   * [drawTriangles](#drawtrianglesvertshader-fragshader)
   * [resize](#resizewidth-height)
+  * [backFaceCullingEnabled](#backfacecullingenabled)
 * [VertexShader](#vertexshader)
-  * [main](#maininput)
-  * [incoming](#incoming)
 * [FragmentShader](#fragmentshader)
-  * [main](#maininput)
 * [mat4](#mat4)
 * [vec4](#vec4)
 * [vec3](#vec3)
@@ -36,6 +34,9 @@
   1. width (optional): new width of the canvas and internal buffers
   2. height (optional): new height of the canvas and internal buffers
 If no paramerters are provided the current width and height of the canvas will be used instead
+
+### backFaceCullingEnabled
+A boolean value used to determine if back-face culling should be performed or not. Defaults to true.
 
 # VertexShader
 ### main(input)
