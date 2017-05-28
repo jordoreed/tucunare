@@ -29,7 +29,7 @@ function mat4(
   m04, m05, m06, m07,
   m08, m09, m10, m11,
   m12, m13, m14, m15) {
-  if (arguments.length != 16) {
+  if (arguments.length !== 16) {
     throw "Expected 16 arguments in mat4 constructor";
   }
 
