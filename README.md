@@ -72,6 +72,8 @@ Setup the project and view matrix. Then create the MVP matrix.
 ```javascript
 // define the "camera" position away from the origin so we can see the triangle
 var camera = new vec4(0, 0, 2, 1);
+// create your own modelMatrix here to change the triangle's size, orientation, or position
+var modelMatrix = mat4.identity();
 var viewMatrix = mat4.translate(-camera.x, -camera.y, -camera.z);
 var projectionMatrix = mat4.perspectiveAspectRatio(canvas.width / canvas.height, 75, 0.1, 1000);
 // include any model transformations in the multiplication here
