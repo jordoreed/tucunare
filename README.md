@@ -7,7 +7,6 @@ Tucunaré is a simple 3D rendering engine intended as an academic learning tool.
 ## Quickstart (Assumes basic understanding of 3D graphics pipelines)
 Include the source files in your html
 ```html
-<script type="text/javascript" src="src/keys.js"     ></script>
 <script type="text/javascript" src="src/vector.js"   ></script>
 <script type="text/javascript" src="src/matrix.js"   ></script>
 <script type="text/javascript" src="src/mathutils.js"></script>
@@ -74,6 +73,8 @@ vertShader.uniforms.mvp = mvpMatrix;
 ```
 Draw the triangle and flush the buffer to the canvas
 ```javascript
+// uncomment if you are animating and need to clear the screen between frames
+// tc.clear()
 tc.drawTriangles(vertShader, fragShader);
 tc.flush();
 ```
