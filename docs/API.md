@@ -55,7 +55,7 @@ vertShader.incoming.point = points;
 ```
 The above line of code will result in a "point" property being passed to the main method inside the "input" parameter e.g.
 ```javascript
-console.log(input.point);
+input.point
 ```
 
 # FragmentShader
