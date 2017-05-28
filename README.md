@@ -48,7 +48,7 @@ Tucunaré expects the vertex shader to return an object with two properties:
 * position (vec4): the transformed point in space
 * output (object): an object containing all the values you wish to pass on to the fragment shader (can only contain values of type number, vec2, vec3, vec4)
 ```javascript
-var vertShader = new Shader();
+var vertShader = new VertexShader();
 // tells the shader to look in the points array to find the "point" input and the colors array to find the "color" input
 vertShader.incoming.point = points;
 vertShader.incoming.color = colors;
@@ -66,7 +66,7 @@ vertShader.main = function(input) {
 Create a fragment shader. We'll keep it simple for this example, but you can do any calculation you like in here to determine the fragment color. Tucunaré expects the fragment shader to return a single vec4 value:
 * (vec4): the final color of the fragment (pixel)
 ```javascript
-var fragShader = new Shader();
+var fragShader = new FragmentShader();
 // input will have interpolated values based on the "output" from the vertex shader. in this case, "color"
 fragShader.main = function(input) {
   return input.color;
