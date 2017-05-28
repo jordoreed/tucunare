@@ -27,10 +27,8 @@ if (typeof module != "undefined" && module.exports) {
 }
 
 function vec2(x, y) {
-  if (!x) x = 0;
-  if (!y) y = 0;
-  this.x = x;
-  this.y = y;
+  this.x = x ? x : 0;
+  this.y = y ? y : 0;
 }
 
 vec2.prototype.toString = function() {
@@ -76,12 +74,9 @@ vec2.prototype.normalizeEquals = function() {
 
 
 function vec3(x, y, z) {
-  if (!x) x = 0.0;
-  if (!y) y = 0.0;
-  if (!z) z = 0.0;
-  this.x = x;
-  this.y = y;
-  this.z = z;
+  this.x = x ? x : 0;
+  this.y = y ? y : 0;
+  this.z = z ? z : 0;
 }
 
 vec3.prototype.toString = function() {
@@ -134,14 +129,10 @@ vec3.prototype.normalizeEquals = function() {
 
 
 function vec4(x, y, z, w) {
-  if (!x) x = 0.0;
-  if (!y) y = 0.0;
-  if (!z) z = 0.0;
-  if (!w) w = 0.0;
-  this.x = x;
-  this.y = y;
-  this.z = z;
-  this.w = w;
+  this.x = x ? x : 0;
+  this.y = y ? y : 0;
+  this.z = z ? z : 0;
+  this.w = w ? w : 0;
 }
 
 vec4.prototype.toString = function() {

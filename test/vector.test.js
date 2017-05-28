@@ -23,6 +23,18 @@ vectorTypes.forEach(function(vectorTypeName) {
       }
     });
 
+    it("constructor no params", function() {
+      const vec = new vectorType();
+      assert.equal(vec.x, 0);
+      assert.equal(vec.y, 0);
+      if (numVectorComponents > 2) {
+        assert.equal(vec.z, 0);
+      }
+      if (numVectorComponents > 3) {
+        assert.equal(vec.w, 0);
+      }
+    });
+
     it("toString", function() {
       const vec = new vectorType(1.1, 2.2, 3.3, 4.4);
       let str = "{ 1.1, 2.2";
