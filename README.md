@@ -80,4 +80,4 @@ tc.drawTriangles(vertShader, fragShader);
 tc.flush();
 ```
 ## What does "tucunaré" mean?
-Tucunaré is the Brazilian name for [Peacock Bass](https://en.wikipedia.org/wiki/Peacock_bass), a very colorful fish in the Amazon region.
+Tucunaré is the Brazilian name for [Peacock Bass](https://en.wikipedia.org/wiki/Peacock_bass), a colorful fish in the Amazon region.
