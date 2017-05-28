@@ -20,7 +20,7 @@ var canvas = // access your canvas object here
 var tc = new Tucunare(canvas);
 tc.setClearColor(new vec4(0, 0, 0, 1));
 ```
-Create some geometry. A single triangle, in this example.
+Create some geometry. In this example, a single triangle.
 ```javascript
 var points = [
   new vec4(-1,-1, 0, 1), // bottom left
