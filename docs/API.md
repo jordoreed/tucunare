@@ -8,7 +8,7 @@
 * [VertexShader](#vertexshader)
 * [FragmentShader](#fragmentshader)
 * [mat4](#mat4)
-* [vec4, vec3, and vec2](#vec4vec3andvec2)
+* [vec4, vec3, vec2](#vec4-vec3-vec2)
 * [vec4](#vec4)
 * [vec3](#vec3)
 * [vec2](#vec2)
