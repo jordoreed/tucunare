@@ -32,9 +32,10 @@
         canvas.height = window.innerHeight;
         tc.resize();
         projectionMatrix = mat4.perspectiveAspectRatio(canvas.width / canvas.height, 75, 0.1, 1000);
-        draw();
       };
       window.onresize = windowResized;
+      // manually call the resized function to init the projection matrix
+      windowResized();
 
       var points = [
         new vec4(-1,-1, 0, 1), // bottom left
@@ -62,12 +63,15 @@
         return input.color;
       };
 
-      var camera = new vec4(0, 0, 2, 1);
+      var camera = new vec4(0, 0, 5, 1);
       var viewMatrix = mat4.translate(-camera.x, -camera.y, -camera.z);
+      var triangleRotationOnY = 0;
 
       function draw() {
-        // include any model transformations in the multiplication here
-        var mvpMatrix = projectionMatrix.multiply(viewMatrix);
+        tc.clear();
+
+        var modelMatrix = mat4.rotateY(triangleRotationOnY);
+        var mvpMatrix = projectionMatrix.multiply(viewMatrix.multiply(modelMatrix));
 
         vertShader.uniforms.mvp = mvpMatrix;
         vertShader.incoming.point = points;
@@ -76,10 +80,22 @@
 
         // flush the buffer to the canvas
         tc.flush();
+
+        // rotate the triangle
+        triangleRotationOnY += 1;
       }
 
-      // manually call the resized function to init the projection matrix and draw the scene
-      windowResized();
+      // start animating
+      if (requestAnimationFrame) {
+        function mainLoop() {
+          draw();
+          requestAnimationFrame(mainLoop);
+        }
+        requestAnimationFrame(mainLoop);
+      }
+      else {
+        setInterval(draw, 1000.0 / 60.0);
+      }
     }
   </script>
 </head>
