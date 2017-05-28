@@ -77,7 +77,7 @@ var modelMatrix = mat4.identity();
 var viewMatrix = mat4.translate(-camera.x, -camera.y, -camera.z);
 var projectionMatrix = mat4.perspectiveAspectRatio(canvas.width / canvas.height, 75, 0.1, 1000);
 // include any model transformations in the multiplication here
-var mvpMatrix = projectionMatrix.multiply(viewMatrix);
+var mvpMatrix = projectionMatrix.multiply(viewMatrix.multiply(modelMatrix));
 
 // give the mvp matrix to the vertex shader via the shader's "uniforms" object
 vertShader.uniforms.mvp = mvpMatrix;
