@@ -1,4 +1,6 @@
+# folders
 node_modules
 stuff
 
+# files
 .DS_Store
