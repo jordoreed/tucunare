@@ -35,7 +35,7 @@ var colors = [
   new vec4(0, 0, 1, 1)  // blue
 ];
 ```
-Create a vertex shader. The shader's "main" function will get called for every item in the data sources you provide. For each item in those data sources the main method will get called and passed an "input" object with "point" and "color" defined as properties. To pass data that doesn't change between points (like the MVP matrix), use the shader's "uniforms" object. We'll get to that in a minute.
+Create a vertex shader. The shader's "main" function will get called for every item in the data sources you provide. It will be passed an "input" object with "point" and "color" defined as properties. To pass data that doesn't change between points (like the MVP matrix), use the shader's "uniforms" object. We'll get to that in a minute.
 Tucunaré expects the vertex shader to return an object with two properties:
 * position (vec4): the transformed point in space
 * output (object): an object containing all the values you wish to pass on to the fragment shader (can only contain values of type number, vec2, vec3, vec4)
