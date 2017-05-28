@@ -35,6 +35,16 @@
 If no paramerters are provided the current width and height of the canvas will be used instead
 
 # VertexShader
+### main(input)
+The main method must be overriden
+* Parameters
+  1. input: the current item(s) that the vertex shader is operating on
+* Return - expects an object with two properties
+  1. position: the transformed point
+  2. output (optional): any data that needs to be interpolated and passed on to the fragment shader (e.g. color)
+
+### incoming
+
 # FragmentShader
 # mat4
 # vec4
