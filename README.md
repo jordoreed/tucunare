@@ -4,22 +4,23 @@ A simple 3D graphics rendering pipeline for HTML5's Canvas.
 ## Heads Up
 Tucunaré is a simple 3D rendering engine intended as an academic learning tool. If you want to render real-time 3D graphics, please use something like [WebGL](https://get.webgl.org/).
 
-## Quickstart
+## Quickstart (Assumes basic understanding of 3D graphics pipelines)
 Include the source files in your html
 ```html
-<script type="text/javascript" src="keys.js"     ></script>
-<script type="text/javascript" src="vector.js"   ></script>
-<script type="text/javascript" src="matrix.js"   ></script>
-<script type="text/javascript" src="mathutils.js"></script>
-<script type="text/javascript" src="shader.js"   ></script>
-<script type="text/javascript" src="tucunare.js" ></script>
+<script type="text/javascript" src="src/keys.js"     ></script>
+<script type="text/javascript" src="src/vector.js"   ></script>
+<script type="text/javascript" src="src/matrix.js"   ></script>
+<script type="text/javascript" src="src/mathutils.js"></script>
+<script type="text/javascript" src="src/shader.js"   ></script>
+<script type="text/javascript" src="src/tucunare.js" ></script>
 ```
-Create a new Tucunaré instance
+Create a new Tucunaré instance, and set the clear color.
 ```javascript
 var canvas = // access your canvas object here
 var tc = new Tucunare(canvas);
+tc.setClearColor(new vec4(0, 0, 0, 1));
 ```
-Create some geometry. A single triangle, in this example.
+Create some geometry. In this example, a single triangle.
 ```javascript
 var points = [
   new vec4(-1,-1, 0, 1), // bottom left
@@ -51,7 +52,7 @@ vertShader.main = function(input) {
   }
 };
 ```
-Create a fragment shader. We'll keep it simple for this example, but you can do any calculation you like in here to determin the fragment color. Tucunaré expects the fragment shader to return a single vec4 value:
+Create a fragment shader. We'll keep it simple for this example, but you can do any calculation you like in here to determine the fragment color. Tucunaré expects the fragment shader to return a single vec4 value:
 * (vec4): the final color of the fragment (pixel)
 ```javascript
 var fragShader = new Shader();
@@ -60,6 +61,21 @@ fragShader.main = function(input) {
   return input.color;
 };
 ```
+Setup the project and view matrix. Then create the MVP matrix.
+```javascript
+var camera = new vec4(0, 0, 2, 1);
+var viewMatrix = mat4.translate(-camera.x, -camera.y, -camera.z);
+var projectionMatrix = mat4.perspectiveAspectRatio(canvas.width / canvas.height, 75, 0.1, 1000);
+// include any model transformations in the multiplication here
+var mvpMatrix = projectionMatrix.multiply(viewMatrix);
 
+// give the mvp matrix to the vertex shader via the shader's "uniforms" object
+vertShader.uniforms.mvp = mvpMatrix;
+```
+Draw the triangle and flush the buffer to the canvas
+```javascript
+tc.drawTriangles(vertShader, fragShader);
+tc.flush();
+```
 ## What does "tucunaré" mean?
 Tucunaré is the Brazilian name for [Peacock Bass](https://en.wikipedia.org/wiki/Peacock_bass), a very colorful fish in the Amazon region.
