@@ -36,18 +36,6 @@ Tucunare.getIntersectionInPlane = function(clip1, clip2, varying1, varying2, pla
   };
 };
 
-Tucunare.triangleIsForwardFacing = function(clip1, clip2, clip3) {
-  var ndc1 = this.clipToNdc(clip1);
-  var ndc2 = this.clipToNdc(clip2);
-  var ndc3 = this.clipToNdc(clip3);
-  var a = ndc2.subtract(ndc1);
-  var b = ndc3.subtract(ndc1);
-  var aV3 = new vec3(a.x, a.y, a.z);
-  var bV3 = new vec3(b.x, b.y, b.z);
-  var normalV3 = aV3.cross(bV3);
-  return normalV3.z >= 0;
-};
-
 Tucunare.lerpVaryingValues = function(varying1, varying2, t) {
   var result = {};
   for (var propName in varying1) {
@@ -236,7 +224,7 @@ Tucunare.prototype.drawTriangles = function(vertShader, fragShader) {
     var clip2 = vsResult2.position;
     var clip3 = vsResult3.position;
 
-    if (Tucunare.triangleIsForwardFacing(clip1, clip2, clip3)) {
+    if (this.triangleIsForwardFacing(clip1, clip2, clip3)) {
       var clipped = this.clipTriangle(clip1, clip2, clip3, vsResult1.output, vsResult2.output, vsResult3.output);
       for (var j = 0; j < clipped.length; j += 3) {
         var ndcUnsortedTriangle = [
@@ -258,6 +246,18 @@ Tucunare.prototype.drawTriangles = function(vertShader, fragShader) {
       }
     }
   }
+};
+
+Tucunare.prototype.triangleIsForwardFacing = function(clip1, clip2, clip3) {
+  var ndc1 = this.clipToNdc(clip1);
+  var ndc2 = this.clipToNdc(clip2);
+  var ndc3 = this.clipToNdc(clip3);
+  var a = ndc2.subtract(ndc1);
+  var b = ndc3.subtract(ndc1);
+  var aV3 = new vec3(a.x, a.y, a.z);
+  var bV3 = new vec3(b.x, b.y, b.z);
+  var normalV3 = aV3.cross(bV3);
+  return normalV3.z >= 0;
 };
 
 // https://en.wikipedia.org/wiki/Sutherland%E2%80%93Hodgman_algorithm
