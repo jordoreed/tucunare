@@ -1,6 +1,7 @@
 function Tucunare(canvas) {
   this.canvas = canvas;
   this.context = canvas.getContext("2d");
+  this.resize();
 }
 
 Tucunare.FRUSTUM_PLANES = [
@@ -21,29 +22,29 @@ Tucunare.pointInFrustumPlane = function(point, planeIndex) {
 };
 
 Tucunare.pointInFrustum = function(point) {
-  // for (var i = 0; i < Tucunare.FRUSTUM_PLANES.length; i++) {
-  //   if (!Tucunare.pointInFrustumPlane(point, i)) {
-  //     return false;
-  //   }
-  // }
-  // return true;
+  for (var i = 0; i < Tucunare.FRUSTUM_PLANES.length; i++) {
+    if (!Tucunare.pointInFrustumPlane(point, i)) {
+      return false;
+    }
+  }
+  return true;
 
-  var a = (
-    point.x >= -point.w && point.x <= point.w &&
-    point.y >= -point.w && point.y <= point.w &&
-    point.z >= -point.w && point.z <= point.w &&
-    point.w > 0
-  );
-  return a;
+  // var a = (
+  //   point.x >= -point.w && point.x <= point.w &&
+  //   point.y >= -point.w && point.y <= point.w &&
+  //   point.z >= -point.w && point.z <= point.w &&
+  //   point.w > 0
+  // );
+  // return a;
 };
 
-Tucunare.getIntersectionInPlane = function(clip1, clip2, color1, color2, planeIndex) {
+Tucunare.getIntersectionInPlane = function(clip1, clip2, varying1, varying2, planeIndex) {
   var plane  = Tucunare.FRUSTUM_PLANES[planeIndex].value; //.scaleN(clip1.w);
   var normal = Tucunare.FRUSTUM_PLANES[planeIndex].normal;
   var t = plane.subtract(clip1).dot(normal) / clip2.subtract(clip1).dot(normal);
   return {
-    clip:  MathUtils.lerpVec4(clip1, clip2, t),
-    color: MathUtils.lerpVec4(color1, color2, t)
+    clip:    MathUtils.lerpVec4(clip1, clip2, t),
+    varying: Shader.lerpVaryingValues(varying1, varying2, t)
   };
 }
 
@@ -58,10 +59,7 @@ Tucunare.findTwithW = function(w1, w2, t) {
   return Math.abs((p - w1) / (w2 - w1));
 };
 
-Tucunare.prototype.resize = function(width, height) {
-  this.canvas.width = width;
-  this.canvas.height = height;
-  this.imageData = this.context.createImageData(width, height);
+Tucunare.prototype.resize = function() {
   this.ndcToScreenIncrementX = (this.canvas.width  - 1) / 2.0;
   this.ndcToScreenIncrementY = (this.canvas.height - 1) / 2.0;
   this.clear();
@@ -116,14 +114,17 @@ Tucunare.prototype.ndcToScreen = function(point) {
 //
 // POINTS
 //
-Tucunare.prototype.drawPoints = function(points, colors, mvp) {
-  for (var i = 0; i < points.length; i++) {
-    // model -> world -> view -> clip
-    var clip = mvp.multiplyV4(points[i]);
+Tucunare.prototype.drawPoints = function(vertShader, fragShader) {
+  var length = vertShader.incomingSourcesLength();
+  for (var i = 0; i < length; i++) {
+    var vsInput  = vertShader.getVertexShaderInput(i);
+    var vsResult = vertShader.runVertexMain(vsInput);
+    var clip = vsResult.position;
+
     if (Tucunare.pointInFrustum(clip)) {
       var ndc    = this.clipToNdc(clip);
       var screen = this.ndcToScreen(ndc);
-      var color = colors[i];
+      var color = fragShader.runFragmentMain(vsResult.output);
       this.setPixel(screen, color);
     }
   }
@@ -132,23 +133,26 @@ Tucunare.prototype.drawPoints = function(points, colors, mvp) {
 //
 // LINES
 //
-Tucunare.prototype.drawLines = function(points, colors, mvp) {
-  for (var i = 0; i < points.length; i += 2) {
-    // model -> world -> view -> clip
-    var clip1 = mvp.multiplyV4(points[i  ]);
-    var clip2 = mvp.multiplyV4(points[i+1]);
-    var clipped = this.clipLine(clip1, clip2, colors[i], colors[i+1]);
+Tucunare.prototype.drawLines = function(vertShader, fragShader) {
+  var length = vertShader.incomingSourcesLength();
+  for (var i = 0; i < length; i += 2) {
+    var vsResult1 = vertShader.runVertexMain(vertShader.getVertexShaderInput(i  ));
+    var vsResult2 = vertShader.runVertexMain(vertShader.getVertexShaderInput(i+1));
+    var clip1 = vsResult1.position;
+    var clip2 = vsResult2.position;
+
+    var clipped = this.clipLine(clip1, clip2, vsResult1.output, vsResult2.output);
     if (clipped.length === 2) {
       var ndc1 = this.clipToNdc(clipped[0].clip);
       var ndc2 = this.clipToNdc(clipped[1].clip);
       var screen1 = this.ndcToScreen(ndc1);
       var screen2 = this.ndcToScreen(ndc2);
-      this.drawScreenLine(screen1, screen2, clipped[0].color, clipped[1].color);
+      this.drawScreenLine(screen1, screen2, clipped[0].varying, clipped[1].varying, fragShader);
     }
   }
 };
 
-Tucunare.prototype.clipLine = function(clip1, clip2, color1, color2) {
+Tucunare.prototype.clipLine = function(clip1, clip2, varying1, varying2) {
   var isVisible = true;
   for (var i = 0; i < Tucunare.FRUSTUM_PLANES.length; i++) {
     var clipIsIn1 = Tucunare.pointInFrustumPlane(clip1, i);
@@ -161,39 +165,40 @@ Tucunare.prototype.clipLine = function(clip1, clip2, color1, color2) {
       break;
     }
     else if (!bothIn) {
-      var clipped = Tucunare.getIntersectionInPlane(clip1, clip2, color1, color2, i);
+      var clipped = Tucunare.getIntersectionInPlane(clip1, clip2, varying1, varying2, i);
       if (clipIsIn1) {
-        clip2  = clipped.clip;
-        color2 = clipped.color;
+        clip2    = clipped.clip;
+        varying2 = clipped.varying;
       }
       else {
-        clip1  = clipped.clip;
-        color1 = clipped.color;
+        clip1    = clipped.clip;
+        varying1 = clipped.varying;
       }
     }
   }
 
-  return isVisible ? [{clip: clip1, color: color1}, {clip: clip2, color: color2}] : [];
+  return isVisible ? [{clip: clip1, varying: varying1}, {clip: clip2, varying: varying2}] : [];
 };
 
-Tucunare.prototype.drawScreenLine = function(screen1, screen2, color1, color2, pixelArray) {
+Tucunare.prototype.drawScreenLine = function(screen1, screen2, varying1, varying2, fragShader, pixelArray) {
   var maxEdgeDistance = Math.max(Math.abs(screen1.x - screen2.x), Math.abs(screen1.y - screen2.y));
   if (maxEdgeDistance >= 0) {
     var increment = maxEdgeDistance > 0 ? (1.0 / maxEdgeDistance) : 0;
     var sameDepth = screen1.w.toPrecision(3) === screen2.w.toPrecision(3);
     for (var i = 0; i <= maxEdgeDistance; i++) {
-      var pixelT = increment * i;
-      var colorT = sameDepth ? pixelT : Tucunare.findTwithW(screen1.w, screen2.w, pixelT);
+      var pixelT   = increment * i;
+      var varyingT = sameDepth ? pixelT : Tucunare.findTwithW(screen1.w, screen2.w, pixelT);
 
       var pixel = new vec4(
         Math.round(MathUtils.lerp(screen1.x, screen2.x, pixelT)),
         Math.round(MathUtils.lerp(screen1.y, screen2.y, pixelT)),
-        0, MathUtils.lerp(screen1.w, screen2.w, colorT)
+        0, MathUtils.lerp(screen1.w, screen2.w, varyingT)
       );
-      var color = MathUtils.lerpVec4(color1, color2, colorT);
+      var varying = Shader.lerpVaryingValues(varying1, varying2, varyingT);
+      var color = fragShader.runFragmentMain(varying);
 
       if (pixelArray) {
-        pixelArray.push({screen: pixel, color: color});
+        pixelArray.push({screen: pixel, varying: varying});
       }
       this.setPixel(pixel, color);
     }
@@ -203,20 +208,23 @@ Tucunare.prototype.drawScreenLine = function(screen1, screen2, color1, color2, p
 //
 // TRIANGLES
 //
-Tucunare.prototype.drawTriangles = function(points, colors, mvp) {
-  for (var i = 0; i < points.length; i += 3) {
-    // model -> world -> view -> clip
-    var clip1 = mvp.multiplyV4(points[i  ]);
-    var clip2 = mvp.multiplyV4(points[i+1]);
-    var clip3 = mvp.multiplyV4(points[i+2]);
+Tucunare.prototype.drawTriangles = function(vertShader, fragShader) {
+  var length = vertShader.incomingSourcesLength();
+  for (var i = 0; i < length; i += 3) {
+    var vsResult1 = vertShader.runVertexMain(vertShader.getVertexShaderInput(i  ));
+    var vsResult2 = vertShader.runVertexMain(vertShader.getVertexShaderInput(i+1));
+    var vsResult3 = vertShader.runVertexMain(vertShader.getVertexShaderInput(i+2));
+    var clip1 = vsResult1.position;
+    var clip2 = vsResult2.position;
+    var clip3 = vsResult3.position;
 
     if (this.triangleIsForwardFacing(clip1, clip2, clip3)) {
-      var clipped = this.clipTriangle(clip1, clip2, clip3, colors[i], colors[i+1], colors[i+2]);
+      var clipped = this.clipTriangle(clip1, clip2, clip3, vsResult1.output, vsResult2.output, vsResult3.output);
       for (var j = 0; j < clipped.length; j += 3) {
         var ndcUnsortedTriangle = [
-          { ndc: this.clipToNdc(clipped[j  ].clip), color: clipped[j  ].color },
-          { ndc: this.clipToNdc(clipped[j+1].clip), color: clipped[j+1].color },
-          { ndc: this.clipToNdc(clipped[j+2].clip), color: clipped[j+2].color }
+          { ndc: this.clipToNdc(clipped[j  ].clip), varying: clipped[j  ].varying },
+          { ndc: this.clipToNdc(clipped[j+1].clip), varying: clipped[j+1].varying },
+          { ndc: this.clipToNdc(clipped[j+2].clip), varying: clipped[j+2].varying }
         ];
         var ndcSortedTriangle = ndcUnsortedTriangle.sort(function(a, b) {return a.ndc.y - b.ndc.y;});
         var bottom = ndcSortedTriangle[0];
@@ -226,7 +234,8 @@ Tucunare.prototype.drawTriangles = function(points, colors, mvp) {
           this.ndcToScreen(bottom.ndc),
           this.ndcToScreen(middle.ndc),
           this.ndcToScreen(top.ndc),
-          bottom.color, middle.color, top.color
+          bottom.varying, middle.varying, top.varying,
+          fragShader
         );
       }
     }
@@ -244,23 +253,14 @@ Tucunare.prototype.triangleIsForwardFacing = function(clip1, clip2, clip3) {
   var normalV3 = aV3.cross(bV3);
   return normalV3.z >= 0;
   // return normalV3.dot(new vec3(clip1.x, clip1.y, clip1.z)) >= 0;
-
-  // var a = clip2.subtract(clip1);
-  // var b = clip3.subtract(clip1);
-  // var aV3 = new vec3(a.x, a.y, a.z);
-  // var bV3 = new vec3(b.x, b.y, b.z);
-  // var normalV3 = aV3.cross(bV3);
-  // return normalV3.dot(new vec3(clip1.x, clip1.y, clip1.z)) >= 0;
-  // var normalV4 = new vec4(normalV3.x, normalV3.y, normalV3.z, 1); // clip1.w);
-  // return clip1.dot(normalV4) >= 0;
 };
 
 // using this algorithm: https://en.wikipedia.org/wiki/Sutherland%E2%80%93Hodgman_algorithm
-Tucunare.prototype.clipTriangle = function(clip1, clip2, clip3, color1, color2, color3) {
+Tucunare.prototype.clipTriangle = function(clip1, clip2, clip3, varying1, varying2, varying3) {
   var outputList = [
-    {clip: clip1, color: color1},
-    {clip: clip2, color: color2},
-    {clip: clip3, color: color3}
+    { clip: clip1, varying: varying1 },
+    { clip: clip2, varying: varying2 },
+    { clip: clip3, varying: varying3 }
   ];
 
   for (var planeIndex = 0; planeIndex < Tucunare.FRUSTUM_PLANES.length; planeIndex++) {
@@ -280,13 +280,13 @@ Tucunare.prototype.clipTriangle = function(clip1, clip2, clip3, color1, color2, 
       if (currentIsInPlane) {
         if (!previousIsInPlane) {
           outputList.push(Tucunare.getIntersectionInPlane(
-            current.clip, previous.clip, current.color, previous.color, planeIndex));
+            current.clip, previous.clip, current.varying, previous.varying, planeIndex));
         }
         outputList.push(current);
       }
       else if (previousIsInPlane) {
         outputList.push(Tucunare.getIntersectionInPlane(
-          current.clip, previous.clip, current.color, previous.color, planeIndex));
+          current.clip, previous.clip, current.varying, previous.varying, planeIndex));
       }
 
       previous = current;
@@ -302,30 +302,20 @@ Tucunare.prototype.clipTriangle = function(clip1, clip2, clip3, color1, color2, 
   return clipped;
 };
 
-Tucunare.prototype.drawTriangle = function(bottom, middle, top, bottomColor, middleColor, topColor) {
+Tucunare.prototype.drawTriangle = function(bottom, middle, top, bottomVarying, middleVarying, topVarying, fragShader) {
   var bt = [], bm = [], mt = [];
-  this.drawScreenLine(bottom, top,    bottomColor, topColor,    bt);
-  this.drawScreenLine(bottom, middle, bottomColor, middleColor, bm);
-  this.drawScreenLine(middle, top,    middleColor, topColor,    mt);
+  this.drawScreenLine(bottom, top,    bottomVarying, topVarying,    fragShader, bt);
+  this.drawScreenLine(bottom, middle, bottomVarying, middleVarying, fragShader, bm);
+  this.drawScreenLine(middle, top,    middleVarying, topVarying,    fragShader, mt);
 
   var sides = this.getTriangleSides(bt, bm, mt);
   for (var i = 0; i < sides.left.length; i++) {
     var left  = sides.left[i];
     var right = sides.right[i];
-    this.setPixel(left.screen, left.color);
-    this.setPixel(right.screen, right.color);
-  }
-
-  if (!keysDown[KEYS.SHIFT]) {
-    for (var i = 0; i < sides.left.length; i++) {
-      var left  = sides.left[i];
-      var right = sides.right[i];
-      this.drawScreenLine(left.screen, right.screen, left.color, right.color);
-    }
+    this.drawScreenLine(left.screen, right.screen, left.varying, right.varying, fragShader);
   }
 };
 
-var aaa = 0;
 Tucunare.prototype.getTriangleSides = function(bt, bm, mt) {
   var one = bm.concat(mt);
   var two = bt;
