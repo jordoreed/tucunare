@@ -6,30 +6,7 @@ function Shader() {
   };
 }
 
-Shader.lerpVaryingValues = function(varying1, varying2, t) {
-  var result = {};
-  for (var propName in varying1) {
-    if (varying1.hasOwnProperty(propName)) {
-      var prop1 = varying1[propName];
-      var prop2 = varying2[propName];
-      if (typeof prop1 === "number") {
-        result[propName] = MathUtils.lerp(prop1, prop2, t);
-      }
-      else if (prop1.constructor === vec2) {
-        result[propName] = MathUtils.lerpVec2(prop1, prop2, t);
-      }
-      else if (prop1.constructor === vec3) {
-        result[propName] = MathUtils.lerpVec3(prop1, prop2, t);
-      }
-      else if (prop1.constructor === vec4) {
-        result[propName] = MathUtils.lerpVec4(prop1, prop2, t);
-      }
-    }
-  }
-  return result;
-};
-
-Shader.prototype.incomingSourcesLength = function() {
+Shader.prototype.findIncomingSourcesLength = function() {
   var length = null;
 
   for (var propName in this.incoming) {

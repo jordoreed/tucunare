@@ -1,57 +1,75 @@
 function Tucunare(canvas) {
   this.canvas = canvas;
-  this.context = canvas.getContext("2d");
+  this.context = this.canvas.getContext("2d");
   this.resize();
 }
 
-Tucunare.FRUSTUM_PLANES = [
-  // { value: new vec4( 0, 0,-1, 0), normal: new vec4( 0, 0, 1, 1) },
-  // { value: new vec4( 0, 0, 1, 0), normal: new vec4( 0, 0,-1, 1) },
-  { value: new vec4( 0, 0, 0, 0), normal: new vec4( 0, 0, 1, 1) },
-  { value: new vec4( 0, 0, 0, 0), normal: new vec4( 0, 0,-1, 1) },
-  { value: new vec4( 0, 0, 0, 0), normal: new vec4( 0, 1, 0, 1) },
-  { value: new vec4( 0, 0, 0, 0), normal: new vec4( 0,-1, 0, 1) },
-  { value: new vec4( 0, 0, 0, 0), normal: new vec4( 1, 0, 0, 1) },
-  { value: new vec4( 0, 0, 0, 0), normal: new vec4(-1, 0, 0, 1) }
+Tucunare.FRUSTUM_PLANE_NORMALS = [
+  new vec4( 0, 0, 1, 1),
+  new vec4( 0, 0,-1, 1),
+  new vec4( 0, 1, 0, 1),
+  new vec4( 0,-1, 0, 1),
+  new vec4( 1, 0, 0, 1),
+  new vec4(-1, 0, 0, 1)
 ];
 
 Tucunare.pointInFrustumPlane = function(point, planeIndex) {
-  var plane  = Tucunare.FRUSTUM_PLANES[planeIndex].value; //.scaleN(point.w);
-  var normal = Tucunare.FRUSTUM_PLANES[planeIndex].normal;
-  return point.subtract(plane).dot(normal) >= 0;
+  var normal = Tucunare.FRUSTUM_PLANE_NORMALS[planeIndex];
+  return point.dot(normal) >= 0;
 };
 
 Tucunare.pointInFrustum = function(point) {
-  for (var i = 0; i < Tucunare.FRUSTUM_PLANES.length; i++) {
+  for (var i = 0; i < Tucunare.FRUSTUM_PLANE_NORMALS.length; i++) {
     if (!Tucunare.pointInFrustumPlane(point, i)) {
       return false;
     }
   }
   return true;
-
-  // var a = (
-  //   point.x >= -point.w && point.x <= point.w &&
-  //   point.y >= -point.w && point.y <= point.w &&
-  //   point.z >= -point.w && point.z <= point.w &&
-  //   point.w > 0
-  // );
-  // return a;
 };
 
 Tucunare.getIntersectionInPlane = function(clip1, clip2, varying1, varying2, planeIndex) {
-  var plane  = Tucunare.FRUSTUM_PLANES[planeIndex].value; //.scaleN(clip1.w);
-  var normal = Tucunare.FRUSTUM_PLANES[planeIndex].normal;
-  var t = plane.subtract(clip1).dot(normal) / clip2.subtract(clip1).dot(normal);
+  var normal = Tucunare.FRUSTUM_PLANE_NORMALS[planeIndex];
+  var t = clip1.dot(normal) / clip1.subtract(clip2).dot(normal);
   return {
     clip:    MathUtils.lerpVec4(clip1, clip2, t),
-    varying: Shader.lerpVaryingValues(varying1, varying2, t)
+    varying: Tucunare.lerpVaryingValues(varying1, varying2, t)
   };
-}
+};
 
-// Tucunare.findTwithW = function(w1, w2, t) {
-//   var w = MathUtils.lerp(w1, w2, t);
-//   return Math.abs((w - w1) / (w2 - w1));
-// };
+Tucunare.triangleIsForwardFacing = function(clip1, clip2, clip3) {
+  var ndc1 = this.clipToNdc(clip1);
+  var ndc2 = this.clipToNdc(clip2);
+  var ndc3 = this.clipToNdc(clip3);
+  var a = ndc2.subtract(ndc1);
+  var b = ndc3.subtract(ndc1);
+  var aV3 = new vec3(a.x, a.y, a.z);
+  var bV3 = new vec3(b.x, b.y, b.z);
+  var normalV3 = aV3.cross(bV3);
+  return normalV3.z >= 0;
+};
+
+Tucunare.lerpVaryingValues = function(varying1, varying2, t) {
+  var result = {};
+  for (var propName in varying1) {
+    if (varying1.hasOwnProperty(propName)) {
+      var prop1 = varying1[propName];
+      var prop2 = varying2[propName];
+      if (typeof prop1 === "number") {
+        result[propName] = MathUtils.lerp(prop1, prop2, t);
+      }
+      else if (prop1.constructor === vec2) {
+        result[propName] = MathUtils.lerpVec2(prop1, prop2, t);
+      }
+      else if (prop1.constructor === vec3) {
+        result[propName] = MathUtils.lerpVec3(prop1, prop2, t);
+      }
+      else if (prop1.constructor === vec4) {
+        result[propName] = MathUtils.lerpVec4(prop1, prop2, t);
+      }
+    }
+  }
+  return result;
+};
 
 Tucunare.findTwithW = function(w1, w2, t) {
   var distance = MathUtils.lerp(1.0 / w1, 1.0 / w2, t);
@@ -115,7 +133,7 @@ Tucunare.prototype.ndcToScreen = function(point) {
 // POINTS
 //
 Tucunare.prototype.drawPoints = function(vertShader, fragShader) {
-  var length = vertShader.incomingSourcesLength();
+  var length = vertShader.findIncomingSourcesLength();
   for (var i = 0; i < length; i++) {
     var vsInput  = vertShader.getVertexShaderInput(i);
     var vsResult = vertShader.runVertexMain(vsInput);
@@ -134,7 +152,7 @@ Tucunare.prototype.drawPoints = function(vertShader, fragShader) {
 // LINES
 //
 Tucunare.prototype.drawLines = function(vertShader, fragShader) {
-  var length = vertShader.incomingSourcesLength();
+  var length = vertShader.findIncomingSourcesLength();
   for (var i = 0; i < length; i += 2) {
     var vsResult1 = vertShader.runVertexMain(vertShader.getVertexShaderInput(i  ));
     var vsResult2 = vertShader.runVertexMain(vertShader.getVertexShaderInput(i+1));
@@ -154,7 +172,7 @@ Tucunare.prototype.drawLines = function(vertShader, fragShader) {
 
 Tucunare.prototype.clipLine = function(clip1, clip2, varying1, varying2) {
   var isVisible = true;
-  for (var i = 0; i < Tucunare.FRUSTUM_PLANES.length; i++) {
+  for (var i = 0; i < Tucunare.FRUSTUM_PLANE_NORMALS.length; i++) {
     var clipIsIn1 = Tucunare.pointInFrustumPlane(clip1, i);
     var clipIsIn2 = Tucunare.pointInFrustumPlane(clip2, i);
     var bothIn  =  clipIsIn1 &&  clipIsIn2;
@@ -194,7 +212,7 @@ Tucunare.prototype.drawScreenLine = function(screen1, screen2, varying1, varying
         Math.round(MathUtils.lerp(screen1.y, screen2.y, pixelT)),
         0, MathUtils.lerp(screen1.w, screen2.w, varyingT)
       );
-      var varying = Shader.lerpVaryingValues(varying1, varying2, varyingT);
+      var varying = Tucunare.lerpVaryingValues(varying1, varying2, varyingT);
       var color = fragShader.runFragmentMain(varying);
 
       if (pixelArray) {
@@ -209,7 +227,7 @@ Tucunare.prototype.drawScreenLine = function(screen1, screen2, varying1, varying
 // TRIANGLES
 //
 Tucunare.prototype.drawTriangles = function(vertShader, fragShader) {
-  var length = vertShader.incomingSourcesLength();
+  var length = vertShader.findIncomingSourcesLength();
   for (var i = 0; i < length; i += 3) {
     var vsResult1 = vertShader.runVertexMain(vertShader.getVertexShaderInput(i  ));
     var vsResult2 = vertShader.runVertexMain(vertShader.getVertexShaderInput(i+1));
@@ -218,7 +236,7 @@ Tucunare.prototype.drawTriangles = function(vertShader, fragShader) {
     var clip2 = vsResult2.position;
     var clip3 = vsResult3.position;
 
-    if (this.triangleIsForwardFacing(clip1, clip2, clip3)) {
+    if (Tucunare.triangleIsForwardFacing(clip1, clip2, clip3)) {
       var clipped = this.clipTriangle(clip1, clip2, clip3, vsResult1.output, vsResult2.output, vsResult3.output);
       for (var j = 0; j < clipped.length; j += 3) {
         var ndcUnsortedTriangle = [
@@ -242,20 +260,7 @@ Tucunare.prototype.drawTriangles = function(vertShader, fragShader) {
   }
 };
 
-Tucunare.prototype.triangleIsForwardFacing = function(clip1, clip2, clip3) {
-  var ndc1 = this.clipToNdc(clip1);
-  var ndc2 = this.clipToNdc(clip2);
-  var ndc3 = this.clipToNdc(clip3);
-  var a = ndc2.subtract(ndc1);
-  var b = ndc3.subtract(ndc1);
-  var aV3 = new vec3(a.x, a.y, a.z);
-  var bV3 = new vec3(b.x, b.y, b.z);
-  var normalV3 = aV3.cross(bV3);
-  return normalV3.z >= 0;
-  // return normalV3.dot(new vec3(clip1.x, clip1.y, clip1.z)) >= 0;
-};
-
-// using this algorithm: https://en.wikipedia.org/wiki/Sutherland%E2%80%93Hodgman_algorithm
+// https://en.wikipedia.org/wiki/Sutherland%E2%80%93Hodgman_algorithm
 Tucunare.prototype.clipTriangle = function(clip1, clip2, clip3, varying1, varying2, varying3) {
   var outputList = [
     { clip: clip1, varying: varying1 },
@@ -263,7 +268,7 @@ Tucunare.prototype.clipTriangle = function(clip1, clip2, clip3, varying1, varyin
     { clip: clip3, varying: varying3 }
   ];
 
-  for (var planeIndex = 0; planeIndex < Tucunare.FRUSTUM_PLANES.length; planeIndex++) {
+  for (var planeIndex = 0; planeIndex < Tucunare.FRUSTUM_PLANE_NORMALS.length; planeIndex++) {
     if (outputList.length <= 0) {
       break;
     }
