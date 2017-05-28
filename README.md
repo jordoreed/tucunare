@@ -4,7 +4,9 @@ A simple 3D graphics rendering pipeline for HTML5's Canvas.
 ## Heads Up
 Tucunaré is a simple 3D rendering engine intended as an academic learning tool. If you want to render real-time 3D graphics, please use something like [WebGL](https://get.webgl.org/).
 
-## Quickstart (Assumes basic understanding of 3D graphics pipelines)
+## Quickstart
+Note: The quickstart assumes a basic understanding of 3D graphics pipelines
+
 Include the source files in your html
 ```html
 <script type="text/javascript" src="src/vector.js"   ></script>
