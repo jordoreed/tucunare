@@ -20,6 +20,8 @@ Create a new Tucunaré instance, and set the clear color.
 var canvas = // access your canvas object here
 var tc = new Tucunare(canvas);
 tc.setClearColor(new vec4(0, 0, 0, 1));
+// uncomment if you want to draw both sides of triangles
+// tc.backFaceCullingEnabled = false;
 ```
 Create some geometry. In this example, a single triangle.
 ```javascript
