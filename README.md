@@ -21,6 +21,7 @@ tc.setClearColor(new vec4(0, 0, 0, 1));
 ```
 Create some geometry. In this example, a single triangle.
 ```javascript
+// for triangles, points should appear in counter-clockwise order. otherwise they will be culled.
 var points = [
   new vec4(-1,-1, 0, 1), // bottom left
   new vec4( 1,-1, 0, 1), // bottom right
