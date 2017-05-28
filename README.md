@@ -32,15 +32,16 @@ var colors = [
   new vec4(0, 0, 1, 1)  // blue
 ];
 ```
-Create a vertex shader. The shader's "main" function will get called for every item in the data sources you provide. For each item in those data sources the main method will get called and passed an "input" object with "point" and "color" defined as properties. Tucunaré expects the vertex shader to return an object with two properties
+Create a vertex shader. The shader's "main" function will get called for every item in the data sources you provide. For each item in those data sources the main method will get called and passed an "input" object with "point" and "color" defined as properties. To pass data that doesn't change between points (like the MVP matrix), use the shader's "uniforms" object. We'll get to that in a minute.
+Tucunaré expects the vertex shader to return an object with two properties:
 * position (vec4): the transformed point in space
-* output (object): an object containing all the values you wish to pass on to the fragment shader
+* output (object): an object containing all the values you wish to pass on to the fragment shader (can only contain values of type number, vec2, vec3, vec4)
 ```javascript
 var vertShader = new Shader();
 // tells the shader to look in the points array to find the "point" input and the colors array to find the "color" input
 vertShader.incoming.point = points;
 vertShader.incoming.color = colors;
-// the input parameter will have two properties: input.point and input.color (as defined above)
+// input will have two properties: input.point and input.color (as defined above)
 vertShader.main = function(input) {
   return {
     position: this.uniforms.mvp.multiplyV4(input.point),
@@ -50,9 +51,11 @@ vertShader.main = function(input) {
   }
 };
 ```
-Create a fragment shader.
+Create a fragment shader. We'll keep it simple for this example, but you can do any calculation you like in here to determin the fragment color. Tucunaré expects the fragment shader to return a single vec4 value:
+* (vec4): the final color of the fragment (pixel)
 ```javascript
 var fragShader = new Shader();
+// input will have interpolated values based on the "output" from the vertex shader. in this case, "color"
 fragShader.main = function(input) {
   return input.color;
 };
