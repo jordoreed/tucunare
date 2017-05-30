@@ -75,16 +75,14 @@
         return input.color;
       };
 
-      var camera = new vec4(0, 0, 30, 1);
+      var camera = new vec4(0, 0, 15, 1);
       var viewMatrix = mat4.translate(-camera.x, -camera.y, -camera.z);
       var rotation = 0;
-      var scale = 1;
-      var sin = 0;
 
       function draw() {
         tc.clear();
 
-        var modelMatrix = mat4.rotateY(rotation).multiply(mat4.rotateX(rotation).multiply(mat4.scale(scale, scale, scale)));
+        var modelMatrix = mat4.rotateY(rotation).multiply(mat4.rotateX(rotation));
         var mvpMatrix = projectionMatrix.multiply(viewMatrix.multiply(modelMatrix));
 
         vertShader.uniforms.mvp = mvpMatrix;
@@ -95,12 +93,10 @@
         // flush the buffer to the canvas
         tc.flush();
 
-        rotation += 1;
+        rotation += 0.5;
         if (rotation > 360) {
           rotation -= 360;
         }
-        sin += 0.05;
-        scale = Math.sin(sin) + 1.1;
       }
 
       // start animating
