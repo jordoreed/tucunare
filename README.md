@@ -12,11 +12,11 @@ I recognize that this library isn't something you'd want to use in a production 
 ## Live Examples
 | Example ||
 | :--- | :---:|
-| [Quickstart](https://badaspen.github.io/tucunare/examples/quickstart.html) | [code](./examples/quickstart.html) |
-| [Points](https://badaspen.github.io/tucunare/examples/points.html) | [code](./examples/points.html) |
-| [Lines](https://badaspen.github.io/tucunare/examples/lines.html) | [code](./examples/lines.html) |
-| [Cube](https://badaspen.github.io/tucunare/examples/cube.html) | [code](./examples/cube.html) |
-| [Sphere/Lighting](https://badaspen.github.io/tucunare/examples/sphere-lighting.html) | [code](./examples/sphere-lighting.html) |
+| [Quickstart](https://jordoreed.github.io/tucunare/examples/quickstart.html) | [code](./examples/quickstart.html) |
+| [Points](https://jordoreed.github.io/tucunare/examples/points.html) | [code](./examples/points.html) |
+| [Lines](https://jordoreed.github.io/tucunare/examples/lines.html) | [code](./examples/lines.html) |
+| [Cube](https://jordoreed.github.io/tucunare/examples/cube.html) | [code](./examples/cube.html) |
+| [Sphere/Lighting](https://jordoreed.github.io/tucunare/examples/sphere-lighting.html) | [code](./examples/sphere-lighting.html) |
 
 ## [Documentation](./docs/API.md)
 
