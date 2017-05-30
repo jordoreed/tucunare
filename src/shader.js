@@ -88,7 +88,7 @@ function FragmentShader() {
 
 FragmentShader.prototype.runMain = function(input) {
   var result = this.main(input);
-  if (!result || result.constructor != vec4) {
+  if (!result || result.constructor !== vec4) {
     throw {
       message: "Expected fragment shader to return value of type vec4",
       returnValue: result
