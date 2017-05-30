@@ -13,7 +13,10 @@ I recognize that this library isn't something you'd want to use in a production 
 | Example ||
 | :--- | :---:|
 | [Quickstart](https://badaspen.github.io/tucunare/examples/quickstart.html) | [code](./examples/quickstart.html) |
-| [Shaded Sphere](https://badaspen.github.io/tucunare/examples/shaded-sphere.html) | [code](./examples/shaded-sphere.html) |
+| [Points](https://badaspen.github.io/tucunare/examples/points.html) | [code](./examples/points.html) |
+| [Lines](https://badaspen.github.io/tucunare/examples/lines.html) | [code](./examples/lines.html) |
+| [Cube](https://badaspen.github.io/tucunare/examples/cube.html) | [code](./examples/cube.html) |
+| [Sphere/Lighting](https://badaspen.github.io/tucunare/examples/sphere-lighting.html) | [code](./examples/sphere-lighting.html) |
 
 ## [Documentation](./docs/API.md)
 
