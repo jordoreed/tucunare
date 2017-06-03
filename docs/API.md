@@ -18,18 +18,18 @@
 ### drawPoints(vertShader, fragShader)
 * Parameters
   1. [VertexShader] vertShader
-  2. [VertexShader] fragShader
+  2. [FragmentShader] fragShader
 
 ### drawLines(vertShader, fragShader)
 * Parameters
   1. [VertexShader] vertShader
-  2. [VertexShader] fragShader
+  2. [FragmentShader] fragShader
 
 ### drawTriangles(vertShader, fragShader)
 Expects point data to appear in counter-clockwise order
 * Parameters
   1. [VertexShader] vertShader
-  2. [VertexShader] fragShader
+  2. [FragmentShader] fragShader
 
 ### resize(width, height)
 If no paramerters are provided the current width and height of the canvas will be used instead
