@@ -86,7 +86,7 @@ fragShader.main = function(input) {
 };
 ```
 
-Setup the project and view matrix. Then create the MVP matrix.
+Setup the model, view, projection matrices, then create the MVP matrix
 ```javascript
 // define the "camera" position away from the origin so we can see the triangle
 var camera = new vec4(0, 0, 2, 1);
