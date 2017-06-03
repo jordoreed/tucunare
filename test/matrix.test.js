@@ -1,5 +1,9 @@
 const assert = require("assert");
 const mat4 = require("../src/matrix").mat4;
+const vectorModule = require("../src/vector");
+const vec2 = vectorModule.vec2;
+const vec3 = vectorModule.vec3;
+const vec4 = vectorModule.vec4;
 
 describe("mat4", function() {
   it("constructor", function() {
@@ -26,6 +30,28 @@ describe("mat4", function() {
       1, 0, 0, 0,
       0, 1, 0, 0,
       0, 0, 1, 0,
+      0, 0, 0, 1
+    ]);
+  });
+
+  it("multiplyV4", function() {
+    var vec = new vec4(0, 0, 0, 1);
+    var mat = mat4.translate(1, 2, 3);
+    var result = mat.multiplyV4(vec);
+
+    assert.equal(result.x, 1);
+    assert.equal(result.y, 2);
+    assert.equal(result.z, 3);
+    assert.equal(result.w, 1);
+  });
+
+  it("translate", function() {
+    var vec = new vec4(0, 0, 0, 1);
+    var mat = mat4.translate(1, 2, 3);
+    assert.deepEqual(mat.values, [
+      1, 0, 0, 1,
+      0, 1, 0, 2,
+      0, 0, 1, 3,
       0, 0, 0, 1
     ]);
   });

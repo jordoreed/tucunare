@@ -34,7 +34,7 @@ VertexShader.prototype.findIncomingSourcesLength = function() {
   for (var propName in this.incoming) {
     if (this.incoming.hasOwnProperty(propName)) {
       var prop = this.incoming[propName];
-      if (!prop || prop.constructor != Array) {
+      if (!prop || prop.constructor !== Array) {
         throw {
           message: "Expected incoming source (" + propName + ") to be of type Array",
           source: prop
@@ -42,7 +42,7 @@ VertexShader.prototype.findIncomingSourcesLength = function() {
       }
 
       var nextLength = prop.length;
-      if (length != null && length != nextLength) {
+      if (length !== null && length !== nextLength) {
         throw {
           message: "Incoming sources on shader must be the same length",
           incoming: this.incoming
@@ -67,7 +67,7 @@ VertexShader.prototype.getInput = function(index) {
 
 VertexShader.prototype.runMain = function(input) {
   var result = this.main(input);
-  if (typeof result != "object" || !result.position || result.position.constructor != vec4) {
+  if (typeof result !== "object" || !result.position || result.position.constructor !== vec4) {
     throw {
       message: "Expected vertex shader to return an object with property 'position'",
       returnValue: result

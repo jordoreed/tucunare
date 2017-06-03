@@ -20,7 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-if (typeof module != "undefined" && module.exports) {
+if (typeof module !== "undefined" && module.exports) {
   module.exports.vec2 = vec2;
   module.exports.vec3 = vec3;
   module.exports.vec4 = vec4;
@@ -65,7 +65,7 @@ vec2.prototype.normalize = function() {
 
 vec2.prototype.normalizeEquals = function() {
   var len = this.length();
-  if (len != 0.0) {
+  if (len !== 0.0) {
     this.x /= len;
     this.y /= len;
   }
@@ -119,7 +119,7 @@ vec3.prototype.normalize = function() {
 
 vec3.prototype.normalizeEquals = function() {
   var len = this.length();
-  if (len != 0.0) {
+  if (len !== 0.0) {
     this.x /= len;
     this.y /= len;
     this.z /= len;
