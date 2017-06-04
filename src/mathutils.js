@@ -20,6 +20,14 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+if (typeof module !== "undefined" && module.exports) {
+  module.exports = MathUtils;
+  var vectorModule = require("../src/vector");
+  vec2 = vectorModule.vec2;
+  vec3 = vectorModule.vec3;
+  vec4 = vectorModule.vec4;
+}
+
 function MathUtils() { }
 
 MathUtils.randomInt = function(min, max) {

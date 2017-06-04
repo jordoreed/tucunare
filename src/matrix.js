@@ -26,6 +26,7 @@ if (typeof module !== "undefined" && module.exports) {
   vec2 = vectorModule.vec2;
   vec3 = vectorModule.vec3;
   vec4 = vectorModule.vec4;
+  MathUtils = require("../src/mathutils");
 }
 
 function mat4(
@@ -230,20 +231,12 @@ mat4.translate = function(x, y, z) {
     0, 0, 0, 1);
 };
 
-mat4.translateV = function(t) {
-  return mat4.translate(t.x, t.y, t.z);
-};
-
 mat4.scale = function(x, y, z) {
   return new mat4(
     x, 0, 0, 0,
     0, y, 0, 0,
     0, 0, z, 0,
     0, 0, 0, 1);
-};
-
-mat4.scaleS = function(s) {
-  return mat4.scale(s, s, s);
 };
 
 // pitch
