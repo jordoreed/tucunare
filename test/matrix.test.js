@@ -5,6 +5,13 @@ const vec2 = vectorModule.vec2;
 const vec3 = vectorModule.vec3;
 const vec4 = vectorModule.vec4;
 
+const MARGIN_OF_ERROR = 0.00000000001;
+
+function assertNumberIsWithinMarginOfError(actual, expected) {
+  assert(Math.abs(actual - expected) < MARGIN_OF_ERROR,
+    `Number exceeds margin of error. Expected: ${expected}, Actual: ${actual}`);
+}
+
 describe("mat4", function() {
   it("constructor", function() {
     var values = [
@@ -54,5 +61,26 @@ describe("mat4", function() {
       0, 0, 1, 3,
       0, 0, 0, 1
     ]);
+  });
+
+  it("scale", function() {
+    var vec = new vec4(1, 1, 1, 1);
+    var mat = mat4.scale(1, 2, 3);
+    assert.deepEqual(mat.values, [
+      1, 0, 0, 0,
+      0, 2, 0, 0,
+      0, 0, 3, 0,
+      0, 0, 0, 1
+    ]);
+  });
+
+  it("rotateX", function() {
+    var vec = new vec4(0, 0, 1, 1);
+    var mat = mat4.rotateX(180);
+    var result = mat.multiplyV4(vec);
+    assertNumberIsWithinMarginOfError(result.x, 0);
+    assertNumberIsWithinMarginOfError(result.y, 0);
+    assertNumberIsWithinMarginOfError(result.z,-1);
+    assertNumberIsWithinMarginOfError(result.w, 1);
   });
 });
