@@ -47,7 +47,7 @@ MathUtils.toDegrees = function(radians) {
 };
 
 MathUtils.clamp = function(num, min, max) {
-  return (num < min ? min : (num > high ? high : num));
+  return (num < min ? min : (num > max ? max : num));
 };
 
 MathUtils.lerp = function(a, b, percent) {
