@@ -6,7 +6,7 @@ Tucunaré is a simple 3D rendering engine intended as an academic learning tool.
 
 ## Improvements
 These are some improvements I hope to make as time permits.
-* I've encountered memory issues on Chrome in Windows 7 which needs to be addressed. The library was designed to demonstrate concepts, but I would like it to run efficiently as well
+* I've encountered memory issues on Chrome in Windows which needs to be addressed. The library was designed to demonstrate concepts, but I would like it to run efficiently as well
 * Drawing with indexed arrays similar to the OpenGL function glDrawElements
 * Webworkers to parallelize the workload
 
