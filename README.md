@@ -4,11 +4,11 @@ A simple 3D graphics rendering pipeline for HTML5's Canvas.
 ## Heads Up
 Tucunaré is a simple 3D rendering engine intended as an academic learning tool. If you want to render real-time 3D graphics, please use something like [WebGL](https://get.webgl.org/).
 
-## Improvements
-These are some improvements I hope to make as time permits.
-* I've encountered memory issues on Chrome in Windows which needs to be addressed. The library was designed to demonstrate concepts, but I would like it to run efficiently as well
-* Drawing with indexed arrays similar to the OpenGL function glDrawElements
-* Webworkers to parallelize the workload
+## Issues/Improvements
+These are some issues/improvements I hope to address as time permits.
+* ISSUE: Memory issues on Chrome in Windows
+* IMPROVEMENT: Drawing with indexed arrays similar to the OpenGL function glDrawElements
+* IMPROVEMENT: Webworkers to parallelize the workload
 
 ## Live Examples
 | Example ||
