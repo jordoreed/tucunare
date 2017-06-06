@@ -4,10 +4,11 @@
   <title>Tucunaré Example</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <style type="text/css">
-    #tc-canvas {
-      position: absolute;
-      top: 0; left: 0;
-    }
+  body {
+    text-align: center;
+    margin: 0;
+    padding: 0;
+  }
   </style>
 
   <script type="text/javascript" src="../src/vector.js"   ></script>
@@ -18,18 +19,29 @@
 
   <script type="text/javascript">
     function main() {
+      var maxWidth  = 640;
+      var maxHeight = 480;
+
       var canvas = document.getElementById("tc-canvas");
-      canvas.width  = window.innerWidth;
-      canvas.height = window.innerHeight;
+      function resizeCanvas() {
+        canvas.width  = window.innerWidth  < maxWidth  ? window.innerWidth  : maxWidth;
+        canvas.height = window.innerHeight < maxHeight ? window.innerHeight : maxHeight;
+      }
+      resizeCanvas();
+
       var tc = new Tucunare(canvas);
       tc.setClearColor(new vec4(0, 0, 0, 1));
       // uncomment if you want to draw both sides of triangles
       // tc.backFaceCullingEnabled = false;
 
       var projectionMatrix = null;
+      var camera = new vec4(0, 0, 100, 1);
+      var viewMatrix = mat4.translate(-camera.x, -camera.y, -camera.z);
+      var innerRotation = 0;
+      var outerRotation = 0;
+
       function windowResized() {
-        canvas.width  = window.innerWidth;
-        canvas.height = window.innerHeight;
+        resizeCanvas();
         tc.resize();
         projectionMatrix = mat4.perspectiveAspectRatio(canvas.width / canvas.height, 75, 0.1, 1000);
       };
@@ -76,11 +88,6 @@
       fragShader.main = function(input) {
         return this.uniforms.color;
       };
-
-      var camera = new vec4(0, 0, 100, 1);
-      var viewMatrix = mat4.translate(-camera.x, -camera.y, -camera.z);
-      var innerRotation = 0;
-      var outerRotation = 0;
 
       function draw() {
         tc.clear();
