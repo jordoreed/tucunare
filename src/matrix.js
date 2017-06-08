@@ -22,11 +22,11 @@
 
 if (typeof module !== "undefined" && module.exports) {
   module.exports.mat4 = mat4;
-  var vectorModule = require("../src/vector");
-  vec2 = vectorModule.vec2;
-  vec3 = vectorModule.vec3;
-  vec4 = vectorModule.vec4;
-  MathUtils = require("../src/mathutils");
+  MathUtils     = require("./mathutils");
+  var vecModule = require("./vector");
+  vec2 = vecModule.vec2;
+  vec3 = vecModule.vec3;
+  vec4 = vecModule.vec4;
 }
 
 function mat4(
