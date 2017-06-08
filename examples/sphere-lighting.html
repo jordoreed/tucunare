@@ -55,17 +55,20 @@
           position: this.uniforms.mvp.multiplyV4(input.point),
           output: {
             color: input.color,
-            lightStrength: Math.max(newNormal.dot(this.uniforms.lightDirection), 0)
+            normal: newNormal
+            // lightStrength: Math.max(newNormal.dot(this.uniforms.lightDirection), 0)
           }
         };
       };
 
       var fragShader = new FragmentShader();
       fragShader.main = function(input) {
+        var normal = input.normal.normalize();
+        var lightStrength = Math.max(normal.dot(this.uniforms.lightDirection), 0)
         return new vec4(
-          input.color.x * input.lightStrength,
-          input.color.y * input.lightStrength,
-          input.color.z * input.lightStrength,
+          input.color.x * lightStrength,
+          input.color.y * lightStrength,
+          input.color.z * lightStrength,
           1
         );
       };
@@ -84,7 +87,7 @@
         vertShader.uniforms.mvp = mvpMatrix;
         lightDirection = mat4.rotateY(0.5).multiplyV3(lightDirection);
         lightDirection.normalizeEquals();
-        vertShader.uniforms.lightDirection = lightDirection;
+        fragShader.uniforms.lightDirection = lightDirection;
         tc.drawTriangles(vertShader, fragShader);
 
         tc.flush();
