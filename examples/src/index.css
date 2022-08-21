@@ -7,9 +7,9 @@ body {
 
 .app {
   display: flex;
-  flex-direction: column;
-  max-width: 720px;
-  min-width: 400px;
+  flex-direction: row;
+  flex-wrap: wrap;
+  max-width: 800px;
   width: 100%;
 }
 
