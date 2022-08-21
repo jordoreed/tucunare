@@ -1,0 +1,18 @@
+body {
+  background-color: black;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.app {
+  display: flex;
+  flex-direction: column;
+  max-width: 720px;
+  min-width: 400px;
+  width: 100%;
+}
+
+canvas {
+  border: 1px solid rgb(70, 70, 70);
+}
