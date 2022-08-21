@@ -1,6 +1,6 @@
 # Tucunaré
 
-## [Live Demo](https://jordoreed.github.io/tucunare/src/examples/cube.html)
+## [Live Demo](https://jordoreed.github.io/tucunare/examples/build/index.html)
 
 A simple 3D graphics rendering pipeline for the HTML5 Canvas.
 
