@@ -155,7 +155,7 @@ export const Sphere = () => {
       };
 
       lightDirection = mat4.rotateY(0.5).multiplyVec3(lightDirection);
-      lightDirection.normalize();
+      lightDirection.normalizeSelf();
 
       tc.drawTriangles(
         {
