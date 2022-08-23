@@ -39,7 +39,7 @@ export class vec2 {
   }
 
   scale(x: number, y?: number) {
-    this.copy().scaleSelf(x, y);
+    return this.copy().scaleSelf(x, y);
   }
 
   scaleSelf(x: number, y?: number) {

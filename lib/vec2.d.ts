@@ -9,7 +9,7 @@ export declare class vec2 {
     addSelf(x: number, y: number): this;
     subtract(x: number, y: number): vec2;
     subtractSelf(x: number, y: number): this;
-    scale(x: number, y?: number): void;
+    scale(x: number, y?: number): vec2;
     scaleSelf(x: number, y?: number): this;
     divide(x: number, y?: number): vec2;
     divideSelf(x: number, y?: number): this;
