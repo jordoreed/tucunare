@@ -9,10 +9,14 @@ body {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
+  justify-content: center;
   max-width: 800px;
   width: 100%;
 }
 
 canvas {
   border: 1px solid rgb(70, 70, 70);
+}
+canvas:hover {
+  border-color: rgb(0, 162, 236);
 }
